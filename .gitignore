@@ -60,3 +60,12 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
+
+DerivedData/
+.DS_Store
+db.sqlite
+.env
+.env.*
+! .env.example
+.vscode
+
