@@ -7,19 +7,23 @@ import Vapor
 public func configure(_ app: Application) async throws {
     // uncomment to serve files from /Public folder
     // app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
+    if let databaseURL = Environment.get("DATABASE_URL") {
+        try app.databases.use(.postgres(url: databaseURL), as: .psql)
+    } else {
+        app.databases.use(
+            .postgres(
+                configuration: .init(
+                    hostname: "localhost",
+                    username: "vapor_username",
+                    password: "vapor_password",
+                    database: "vapor_database",
+                    tls: .disable
+                )
+            ),
+            as: .psql
+        )
+    }
 
-    app.databases.use(
-        .postgres(
-            configuration: .init(
-                hostname: "localhost",
-                username: "vapor_username",
-                password: "vapor_password",
-                database: "vapor_database",
-                tls: .disable
-            )
-        ),
-        as: .psql
-    )
 
     app.migrations.add(CreateExam())
     
@@ -29,3 +33,4 @@ public func configure(_ app: Application) async throws {
     // register routes
     try routes(app)
 }
+
