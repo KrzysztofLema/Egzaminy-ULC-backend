@@ -32,6 +32,9 @@ final class Exam: Model, @unchecked Sendable {
     @Field(key: "logo")
     var logo: String
     
+    @Children(for: \.$exam)
+    var subjects: Array<Subject>
+    
     init() {}
     
     init(
@@ -51,8 +54,16 @@ final class Exam: Model, @unchecked Sendable {
         self.background = background
         self.logo = logo
     }
-}
-
-extension Exam: Content {
     
+    func toDTO() -> ExamDTO {
+        .init(
+            title: title,
+            subtitle: subtitle,
+            text: text,
+            image: image,
+            background: background,
+            logo: logo
+        )
+    }
+
 }
