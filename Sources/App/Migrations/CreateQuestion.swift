@@ -6,6 +6,7 @@ struct CreateQuestion: AsyncMigration {
             .id()
             .field("question_number", .string, .required)
             .field("title", .string, .required)
+            .field("subjectID", .uuid, .required, .references("subjects", "id"))
             .create()
     }
 

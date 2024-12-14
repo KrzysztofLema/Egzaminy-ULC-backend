@@ -6,6 +6,7 @@ struct CreateAnwser: AsyncMigration {
             .id()
             .field("anwserText", .string, .required)
             .field("isCorrect", .bool, .required)
+            .field("questionID", .uuid, .required, .references("questions", "id"))
             .create()
     }
 
