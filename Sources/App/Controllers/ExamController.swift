@@ -21,7 +21,11 @@ struct ExamController: RouteCollection {
     func getAllHandler(_ req: Request) async throws -> [Exam] {
         try await Exam
             .query(on: req.db)
-            .with(\.$subjects)
+            .with(\.$subjects) { subject in
+                subject.with(\.$questions) { question in
+                    question.with(\.$answers)
+                }
+            }
             .all()
     }
 
@@ -31,7 +35,6 @@ struct ExamController: RouteCollection {
         let user = try req.auth.require(User.self)
         let userID = try user.requireID()
 
-        // Create and save the Exam
         let exam = Exam(
             title: examData.title,
             subtitle: examData.subtitle,
@@ -43,12 +46,32 @@ struct ExamController: RouteCollection {
         )
         try await exam.save(on: req.db)
 
-        // Create and save the Subjects
-        let subjects = examData.subjects.map { subjectData in
-            Subject(title: subjectData.title, image: subjectData.image, examID: try! exam.requireID())
-        }
+        for subjectData in examData.subjects {
+            let subject = Subject(
+                title: subjectData.title,
+                image: subjectData.image,
+                examID: try exam.requireID()
+            )
+            try await subject.save(on: req.db)
 
-        try await exam.$subjects.create(subjects, on: req.db)
+            for questionData in subjectData.questions {
+                let question = Question(
+                    questionNumber: questionData.questionNumber,
+                    title: questionData.title,
+                    subjectID: try subject.requireID()
+                )
+                try await question.save(on: req.db)
+
+                for answerData in questionData.answers {
+                    let answer = Answer(
+                        answerText: answerData.answerText,
+                        isCorrect: answerData.isCorrect,
+                        questionID: try question.requireID()
+                    )
+                    try await answer.save(on: req.db)
+                }
+            }
+        }
         return exam
     }
 
@@ -87,4 +110,16 @@ struct CreateExamData: Content {
 struct CreateSubjectData: Content {
     let title: String
     let image: String
+    let questions: [CreateQuestionData]
+}
+
+struct CreateQuestionData: Content {
+    let questionNumber: String
+    let title: String
+    let answers: [CreateAnwserData]
+}
+
+struct CreateAnwserData: Content {
+    let answerText: String
+    let isCorrect: Bool
 }

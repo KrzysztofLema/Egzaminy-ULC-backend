@@ -7,7 +7,7 @@ final class Answer: Model, Content, @unchecked Sendable {
     @ID(key: .id)
     var id: UUID?
 
-    @Field(key: "anwserText")
+    @Field(key: "answerText")
     var answerText: String
 
     @Field(key: "isCorrect")
