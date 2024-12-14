@@ -25,13 +25,11 @@ final class Question: Model, Content, @unchecked Sendable {
         id: UUID? = nil,
         questionNumber: String,
         title: String,
-        answers: [Answer],
         subjectID: Subject.IDValue
     ) {
         self.id = id
         self.questionNumber = questionNumber
         self.title = title
-        self.answers = answers
         $subject.id = subjectID
     }
 }
