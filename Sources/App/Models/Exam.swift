@@ -1,14 +1,8 @@
-//
-//  Exam.swift
-//  template-fluent-postgres
-//
-//  Created by Krzysztof Lema on 09/12/2024.
-//
-
 import Vapor
 import Fluent
 
 final class Exam: Model, @unchecked Sendable {
+    
     static let schema = "exams"
     
     @ID(key: .id)
@@ -32,6 +26,9 @@ final class Exam: Model, @unchecked Sendable {
     @Field(key: "logo")
     var logo: String
     
+    @Children(for: \.$exam)
+    var subjects: Array<Subject>
+    
     init() {}
     
     init(
@@ -51,8 +48,16 @@ final class Exam: Model, @unchecked Sendable {
         self.background = background
         self.logo = logo
     }
-}
-
-extension Exam: Content {
     
+    func toDTO() -> ExamDTO {
+        .init(
+            title: title,
+            subtitle: subtitle,
+            text: text,
+            image: image,
+            background: background,
+            logo: logo
+        )
+    }
+
 }

@@ -1,10 +1,3 @@
-//
-//  ExamController.swift
-//  template-fluent-postgres
-//
-//  Created by Krzysztof Lema on 09/12/2024.
-//
-
 import Fluent
 import Vapor
 
@@ -17,31 +10,16 @@ struct ExamController: RouteCollection {
     }
     
     @Sendable
-    func getAllHandler(_ req: Request) async throws -> [Exam] {
-        try await Exam.query(on: req.db).all()
+    func getAllHandler(_ req: Request) async throws -> [ExamDTO] {
+        try await Exam.query(on: req.db).all().map { $0.toDTO() }
     }
     
     @Sendable
-    func createHandler(_ req: Request) async throws -> Exam  {
-        let data = try req.content.decode(CreateExamData.self)
-        let exam = Exam(
-            title: data.title,
-            subtitle: data.subtitle,
-            text: data.text,
-            image: data.image,
-            background: data.background,
-            logo: data.logo
-        )
+    func createHandler(_ req: Request) async throws -> ExamDTO  {
+        let exam = try req.content.decode(ExamDTO.self).toModel()
+     
         try await exam.save(on: req.db)
-        return exam
+        
+        return exam.toDTO()
     }
-}
-
-struct CreateExamData: Content {
-    let title: String
-    let subtitle: String
-    let text: String
-    let image: String
-    let background: String
-    let logo: String
 }
