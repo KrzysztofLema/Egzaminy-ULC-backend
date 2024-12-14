@@ -1,7 +1,7 @@
 import Fluent
 import Vapor
 
-final class Exam: Model, @unchecked Sendable {
+final class Exam: Model, Content, @unchecked Sendable {
     static let schema = "exams"
 
     @ID(key: .id)
@@ -28,6 +28,9 @@ final class Exam: Model, @unchecked Sendable {
     @Children(for: \.$exam)
     var subjects: [Subject]
 
+    @Parent(key: "userID")
+    var user: User
+
     init() {}
 
     init(
@@ -37,7 +40,8 @@ final class Exam: Model, @unchecked Sendable {
         text: String,
         image: String,
         background: String,
-        logo: String
+        logo: String,
+        userID: User.IDValue
     ) {
         self.id = id
         self.title = title
@@ -46,16 +50,6 @@ final class Exam: Model, @unchecked Sendable {
         self.image = image
         self.background = background
         self.logo = logo
-    }
-
-    func toDTO() -> ExamDTO {
-        .init(
-            title: title,
-            subtitle: subtitle,
-            text: text,
-            image: image,
-            background: background,
-            logo: logo
-        )
+        $user.id = userID
     }
 }

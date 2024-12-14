@@ -24,11 +24,13 @@ public func configure(_ app: Application) async throws {
         )
     }
 
+    app.migrations.add(CreateUser())
     app.migrations.add(CreateExam())
+    app.migrations.add(CreateSubject())
     app.migrations.add(CreateQuestion())
     app.migrations.add(CreateAnwser())
-    app.migrations.add(CreateAnwser())
-    app.migrations.add(CreateUser())
+    app.migrations.add(CreateToken())
+    app.migrations.add(CreateAdminUser())
 
     app.logger.logLevel = .debug
 

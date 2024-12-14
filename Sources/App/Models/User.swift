@@ -13,6 +13,9 @@ final class User: Model, Content, @unchecked Sendable {
     @Field(key: "username")
     var username: String
 
+    @Children(for: \.$user)
+    var exams: [Exam]
+
     @Field(key: "password")
     var password: String
 
@@ -49,6 +52,15 @@ final class User: Model, Content, @unchecked Sendable {
             self.name = name
             self.username = username
         }
+    }
+}
+
+extension User: ModelAuthenticatable {
+    static let usernameKey = \User.$username
+    static let passwordHashKey = \User.$password
+
+    func verify(password: String) throws -> Bool {
+        try Bcrypt.verify(password, created: self.password)
     }
 }
 
