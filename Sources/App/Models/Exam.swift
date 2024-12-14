@@ -1,14 +1,8 @@
-//
-//  Exam.swift
-//  template-fluent-postgres
-//
-//  Created by Krzysztof Lema on 09/12/2024.
-//
-
 import Vapor
 import Fluent
 
 final class Exam: Model, @unchecked Sendable {
+    
     static let schema = "exams"
     
     @ID(key: .id)

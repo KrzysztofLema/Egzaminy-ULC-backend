@@ -1,13 +1,7 @@
-//
-//  UsersController.swift
-//  template-fluent-postgres
-//
-//  Created by Krzysztof Lema on 12/12/2024.
-//
-
 import Vapor
 
 struct UsersController: RouteCollection {
+    
     func boot(routes: any RoutesBuilder) throws {
         let usersRoute = routes.grouped("api", "users")
         usersRoute.get(use: getAllHandler)

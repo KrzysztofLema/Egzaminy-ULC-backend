@@ -2,6 +2,7 @@ import Fluent
 import Vapor
 
 struct ExamDTO: Content {
+    
     var id: UUID?
     var title: String
     var subtitle: String

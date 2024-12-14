@@ -1,8 +1,8 @@
-
 import Fluent
 import Vapor
 
 struct AnwserDTO: Content {
+    
     var id: UUID?
     var answerText: String
     var isCorrect: Bool

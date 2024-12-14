@@ -1,14 +1,8 @@
-//
-//  AnswerDto.swift
-//  template-fluent-postgres
-//
-//  Created by Krzysztof Lema on 11/12/2024.
-//
-
 import Vapor
 import Fluent
 
 final class Answer: Model, @unchecked Sendable {
+    
     static let schema = "answers"
     
     @ID(key: .id)
