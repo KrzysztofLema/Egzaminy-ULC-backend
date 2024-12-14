@@ -1,5 +1,8 @@
+import Foundation
 // swift-tools-version:6.0
 import PackageDescription
+
+let isSwiftLintEnabled: Bool = ProcessInfo.processInfo.environment["SWIFTLINT"] == "YES"
 
 let package = Package(
     name: "template-fluent-postgres",
@@ -28,7 +31,9 @@ let package = Package(
                 .product(name: "NIOPosix", package: "swift-nio"),
             ],
             swiftSettings: swiftSettings,
-            plugins: [.plugin(name: "SwiftLintBuildToolPlugin", package: "SwiftLintPlugins")]
+            plugins: isSwiftLintEnabled
+                ? [.plugin(name: "SwiftLintBuildToolPlugin", package: "SwiftLintPlugins")]
+                : []
         ),
         .testTarget(
             name: "AppTests",

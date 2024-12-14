@@ -9,12 +9,6 @@ RUN export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true \
   && apt-get -q dist-upgrade -y \
   && apt-get install -y libjemalloc-dev
 
-RUN curl -L https://github.com/realm/SwiftLint/releases/download/0.54.0/swiftlint_linux.zip -o swiftlint_linux.zip \
-  && unzip swiftlint_linux.zip \
-  && mv swiftlint /usr/local/bin/ \
-  && chmod +x /usr/local/bin/swiftlint \
-  && rm swiftlint_linux.zip
-
 # Set up a build area
 WORKDIR /build
 
@@ -25,6 +19,9 @@ WORKDIR /build
 COPY ./Package.* ./
 RUN swift package resolve \
   $([ -f ./Package.resolved ] && echo "--force-resolved-versions" || true)
+
+# Set SWIFTLINT to NO to disable the plugin during the build
+ENV SWIFTLINT=NO
 
 # Copy entire repo into container
 COPY . .
