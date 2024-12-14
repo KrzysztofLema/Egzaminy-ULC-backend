@@ -6,6 +6,7 @@ struct CreateSubject: AsyncMigration {
             .id()
             .field("title", .string, .required)
             .field("image", .string, .required)
+            .field("examID", .uuid, .references("exams", "id"))
             .create()
     }
 
