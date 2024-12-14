@@ -2,18 +2,18 @@ import Fluent
 import Vapor
 
 final class Subject: Model, Content, @unchecked Sendable {
-    static let schema = "subjects"
+    static let schema = Schema.title
 
     @ID(key: .id)
     var id: UUID?
 
-    @Field(key: "title")
+    @Field(key: Key.title)
     var title: String
 
-    @Field(key: "image")
+    @Field(key: Key.image)
     var image: String
 
-    @Parent(key: "examID")
+    @Parent(key: Key.examID)
     var exam: Exam
 
     @Children(for: \.$subject)
@@ -31,5 +31,17 @@ final class Subject: Model, Content, @unchecked Sendable {
         self.title = title
         self.image = image
         $exam.id = examID
+    }
+}
+
+extension Subject {
+    enum Key {
+        static let title: FieldKey = "title"
+        static let image: FieldKey = "image"
+        static let examID: FieldKey = "examID"
+    }
+
+    enum Schema {
+        static let title: String = "subjects"
     }
 }
