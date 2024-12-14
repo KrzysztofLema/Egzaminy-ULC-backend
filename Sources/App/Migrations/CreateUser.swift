@@ -13,7 +13,7 @@ struct CreateUser: AsyncMigration {
             .field("profilePicture", .string)
             .create()
     }
-    
+
     func revert(on database: any Database) async throws {
         try await database.schema("users").delete()
     }

@@ -1,26 +1,26 @@
-import Vapor
 import Fluent
+import Vapor
 
 final class Subject: Model, @unchecked Sendable {
     static let schema = "subjects"
-    
+
     @ID(key: .id)
     var id: UUID?
-    
+
     @Field(key: "title")
     var title: String
-    
+
     @Field(key: "image")
     var image: String
-    
+
     @Parent(key: "examID")
     var exam: Exam
-    
+
     @Children(for: \.$subject)
-    var questions: Array<Question>
+    var questions: [Question]
 
     init() {}
-    
+
     init(
         id: UUID? = nil,
         title: String,
@@ -30,9 +30,9 @@ final class Subject: Model, @unchecked Sendable {
         self.id = id
         self.title = title
         self.image = image
-        self.$exam.id = examID
+        $exam.id = examID
     }
-    
+
     func toDTO() -> SubjectDTO {
         .init(
             id: id,
@@ -40,5 +40,4 @@ final class Subject: Model, @unchecked Sendable {
             image: image
         )
     }
-
 }
