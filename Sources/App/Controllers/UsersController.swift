@@ -3,9 +3,21 @@ import Vapor
 struct UsersController: RouteCollection {
     func boot(routes: any RoutesBuilder) throws {
         let usersRoute = routes.grouped("api", "users")
-        usersRoute.get(use: getAllHandler)
-        usersRoute.post(use: createHandler)
-        usersRoute.get(":id", use: getHandler)
+
+        let basicAuthMiddleware = User.authenticator()
+        let basicAuthGroup = usersRoute.grouped(basicAuthMiddleware)
+        basicAuthGroup.post("login", use: loginHandler)
+
+        let tokenAuthMiddleware = Token.authenticator()
+        let guardAuthMiddleware = User.guardMiddleware()
+        let tokenAuthGroup = usersRoute.grouped(
+            tokenAuthMiddleware,
+            guardAuthMiddleware
+        )
+        tokenAuthGroup.post(use: createHandler)
+        tokenAuthGroup.get(use: getAllHandler)
+        tokenAuthGroup.post(use: createHandler)
+        tokenAuthGroup.get(":id", use: getHandler)
     }
 
     @Sendable
@@ -29,5 +41,13 @@ struct UsersController: RouteCollection {
         }
 
         return user.convertToPublic()
+    }
+
+    @Sendable
+    func loginHandler(_ req: Request) async throws -> Token {
+        let user = try req.auth.require(User.self)
+        let token = try Token.generate(for: user)
+        try await token.save(on: req.db)
+        return token
     }
 }

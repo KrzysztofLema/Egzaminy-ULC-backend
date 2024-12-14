@@ -10,6 +10,7 @@ struct CreateExam: AsyncMigration {
             .field("image", .string, .required)
             .field("background", .string, .required)
             .field("logo", .string, .required)
+            .field("userID", .uuid, .required, .references("users", "id"))
             .create()
     }
 

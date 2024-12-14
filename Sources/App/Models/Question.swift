@@ -1,7 +1,7 @@
 import Fluent
 import Vapor
 
-final class Question: Model, @unchecked Sendable {
+final class Question: Model, Content, @unchecked Sendable {
     static let schema = "questions"
 
     @ID(key: .id)
@@ -33,13 +33,5 @@ final class Question: Model, @unchecked Sendable {
         self.title = title
         self.answers = answers
         $subject.id = subjectID
-    }
-
-    func toDTO() -> QuestionDTO {
-        .init(
-            id: id,
-            title: title,
-            questionNumber: questionNumber
-        )
     }
 }
