@@ -1,6 +1,6 @@
-import NIOSSL
 import Fluent
 import FluentPostgresDriver
+import NIOSSL
 import Vapor
 
 // configures your application
@@ -29,11 +29,10 @@ public func configure(_ app: Application) async throws {
     app.migrations.add(CreateAnwser())
     app.migrations.add(CreateAnwser())
     app.migrations.add(CreateUser())
-    
+
     app.logger.logLevel = .debug
-    
+
     try await app.autoMigrate()
     // register routes
     try routes(app)
 }
-
