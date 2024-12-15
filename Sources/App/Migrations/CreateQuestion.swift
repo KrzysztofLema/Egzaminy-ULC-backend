@@ -1,16 +1,20 @@
 import Fluent
 
 struct CreateQuestion: AsyncMigration {
+    private typealias QuestionKey = Question.Key
+    private typealias Schema = Question.Schema
+    private typealias SubjectSchema = Subject.Schema
+
     func prepare(on database: any Database) async throws {
-        try await database.schema("questions")
+        try await database.schema(Schema.title)
             .id()
-            .field("question_number", .string, .required)
-            .field("title", .string, .required)
-            .field("subjectID", .uuid, .required, .references("subjects", "id"))
+            .field(QuestionKey.questionNumber, .string, .required)
+            .field(QuestionKey.title, .string, .required)
+            .field(QuestionKey.subjectID, .uuid, .required, .references(SubjectSchema.title, FieldKey.id, onDelete: .cascade))
             .create()
     }
 
     func revert(on database: any Database) async throws {
-        try await database.schema("questions").delete()
+        try await database.schema(Schema.title).delete()
     }
 }

@@ -30,49 +30,58 @@ struct ExamController: RouteCollection {
     }
 
     @Sendable
-    func createHandler(_ req: Request) async throws -> Exam {
+    func createHandler(_ req: Request) async throws -> HTTPStatus {
         let examData = try req.content.decode(CreateExamData.self)
         let user = try req.auth.require(User.self)
         let userID = try user.requireID()
 
-        let exam = Exam(
-            title: examData.title,
-            subtitle: examData.subtitle,
-            text: examData.text,
-            image: examData.image,
-            background: examData.background,
-            logo: examData.logo,
-            userID: userID
-        )
-        try await exam.save(on: req.db)
-
-        for subjectData in examData.subjects {
-            let subject = Subject(
-                title: subjectData.title,
-                image: subjectData.image,
-                examID: try exam.requireID()
+        return try await req.db.transaction { database in
+            let exam = Exam(
+                title: examData.title,
+                subtitle: examData.subtitle,
+                text: examData.text,
+                image: examData.image,
+                background: examData.background,
+                logo: examData.logo,
+                userID: userID
             )
-            try await subject.save(on: req.db)
+            try await exam.save(on: database)
+            let examID = try exam.requireID()
 
-            for questionData in subjectData.questions {
-                let question = Question(
-                    questionNumber: questionData.questionNumber,
-                    title: questionData.title,
-                    subjectID: try subject.requireID()
+            for subjectDTO in examData.subjects {
+                let subject = Subject(
+                    title: subjectDTO.title,
+                    image: subjectDTO.image,
+                    examID: examID
                 )
-                try await question.save(on: req.db)
+                try await subject.save(on: database)
 
-                for answerData in questionData.answers {
-                    let answer = Answer(
-                        answerText: answerData.answerText,
-                        isCorrect: answerData.isCorrect,
-                        questionID: try question.requireID()
+                let subjectID = try subject.requireID()
+
+                for questionDTO in subjectDTO.questions {
+                    let question = Question(
+                        questionNumber: questionDTO.questionNumber,
+                        title: questionDTO.title,
+                        subjectID: subjectID
                     )
-                    try await answer.save(on: req.db)
+
+                    try await question.save(on: database)
+
+                    let questionID = try question.requireID()
+
+                    for anwserDTO in questionDTO.answers {
+                        let answer = Answer(
+                            answerText: anwserDTO.answerText,
+                            isCorrect: anwserDTO.isCorrect,
+                            questionID: questionID
+                        )
+
+                        try await answer.save(on: database)
+                    }
                 }
             }
+            return .ok
         }
-        return exam
     }
 
     @Sendable

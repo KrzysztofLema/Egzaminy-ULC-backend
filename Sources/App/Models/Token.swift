@@ -2,15 +2,15 @@ import Fluent
 import Vapor
 
 final class Token: Model, Content, @unchecked Sendable {
-    static let schema = "tokens"
+    static let schema = Schema.title
 
     @ID(key: .id)
     var id: UUID?
 
-    @Field(key: "value")
+    @Field(key: Key.value)
     var value: String
 
-    @Parent(key: "userID")
+    @Parent(key: Key.userID)
     var user: User
 
     init() {}
@@ -38,5 +38,16 @@ extension Token: ModelTokenAuthenticatable {
 
     var isValid: Bool {
         true
+    }
+}
+
+extension Token {
+    enum Key {
+        static let value: FieldKey = "value"
+        static let userID: FieldKey = "userID"
+    }
+
+    enum Schema {
+        static let title: String = "tokens"
     }
 }

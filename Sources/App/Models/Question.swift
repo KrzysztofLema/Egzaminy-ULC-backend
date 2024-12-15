@@ -2,21 +2,21 @@ import Fluent
 import Vapor
 
 final class Question: Model, Content, @unchecked Sendable {
-    static let schema = "questions"
+    static let schema = Schema.title
 
     @ID(key: .id)
     var id: UUID?
 
-    @Field(key: "question_number")
+    @Field(key: Key.questionNumber)
     var questionNumber: String
 
-    @Field(key: "title")
+    @Field(key: Key.title)
     var title: String
 
     @Children(for: \.$question)
     var answers: [Answer]
 
-    @Parent(key: "subjectID")
+    @Parent(key: Key.subjectID)
     var subject: Subject
 
     init() {}
@@ -31,5 +31,17 @@ final class Question: Model, Content, @unchecked Sendable {
         self.questionNumber = questionNumber
         self.title = title
         $subject.id = subjectID
+    }
+}
+
+extension Question {
+    enum Key {
+        static let questionNumber: FieldKey = "question_number"
+        static let title: FieldKey = "title"
+        static let subjectID: FieldKey = "subjectID"
+    }
+
+    enum Schema {
+        static let title: String = "questions"
     }
 }

@@ -2,33 +2,33 @@ import Fluent
 import Vapor
 
 final class Exam: Model, Content, @unchecked Sendable {
-    static let schema = "exams"
+    static let schema = Schema.title
 
     @ID(key: .id)
     var id: UUID?
 
-    @Field(key: "title")
+    @Field(key: Key.title)
     var title: String
 
-    @Field(key: "subtitle")
+    @Field(key: Key.subtitle)
     var subtitle: String
 
-    @Field(key: "text")
+    @Field(key: Key.text)
     var text: String
 
-    @Field(key: "image")
+    @Field(key: Key.image)
     var image: String
 
-    @Field(key: "background")
+    @Field(key: Key.background)
     var background: String
 
-    @Field(key: "logo")
+    @Field(key: Key.logo)
     var logo: String
 
     @Children(for: \.$exam)
     var subjects: [Subject]
 
-    @Parent(key: "userID")
+    @Parent(key: Key.userID)
     var user: User
 
     init() {}
@@ -51,5 +51,21 @@ final class Exam: Model, Content, @unchecked Sendable {
         self.background = background
         self.logo = logo
         $user.id = userID
+    }
+}
+
+extension Exam {
+    enum Key {
+        static let title: FieldKey = "title"
+        static let subtitle: FieldKey = "subtitle"
+        static let text: FieldKey = "text"
+        static let image: FieldKey = "image"
+        static let background: FieldKey = "background"
+        static let logo: FieldKey = "logo"
+        static let userID: FieldKey = "userID"
+    }
+
+    enum Schema {
+        static let title: String = "exams"
     }
 }

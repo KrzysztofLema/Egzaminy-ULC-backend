@@ -1,20 +1,24 @@
 import Fluent
 
 struct CreateExam: AsyncMigration {
+    private typealias ExamKey = Exam.Key
+    private typealias Schema = Exam.Schema
+    private typealias UsersSchema = User.Schema
+
     func prepare(on database: any Database) async throws {
-        try await database.schema("exams")
+        try await database.schema(Schema.title)
             .id()
-            .field("title", .string, .required)
-            .field("subtitle", .string, .required)
-            .field("text", .string, .required)
-            .field("image", .string, .required)
-            .field("background", .string, .required)
-            .field("logo", .string, .required)
-            .field("userID", .uuid, .required, .references("users", "id"))
+            .field(ExamKey.title, .string, .required)
+            .field(ExamKey.subtitle, .string, .required)
+            .field(ExamKey.text, .string, .required)
+            .field(ExamKey.image, .string, .required)
+            .field(ExamKey.background, .string, .required)
+            .field(ExamKey.logo, .string, .required)
+            .field(ExamKey.userID, .uuid, .required, .references(UsersSchema.title, FieldKey.id, onDelete: .cascade))
             .create()
     }
 
     func revert(on database: any Database) async throws {
-        try await database.schema("exams").delete()
+        try await database.schema(Schema.title).delete()
     }
 }
