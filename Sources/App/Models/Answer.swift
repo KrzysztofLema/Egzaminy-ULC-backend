@@ -7,7 +7,7 @@ final class Answer: Model, Content, @unchecked Sendable {
     @ID(key: .id)
     var id: UUID?
 
-    @Field(key: Key.anwserText)
+    @Field(key: Key.answerText)
     var answerText: String
 
     @Field(key: Key.isCorrect)
@@ -33,12 +33,12 @@ final class Answer: Model, Content, @unchecked Sendable {
 
 extension Answer {
     enum Key {
-        static let anwserText: FieldKey = "answerText"
+        static let answerText: FieldKey = "answerText"
         static let isCorrect: FieldKey = "isCorrect"
         static let questionID: FieldKey = "questionID"
     }
 
     enum Schema {
-        static let title: String = "anwsers"
+        static let title: String = "answer"
     }
 }

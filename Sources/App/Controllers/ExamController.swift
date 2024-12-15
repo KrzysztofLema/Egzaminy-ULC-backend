@@ -69,10 +69,10 @@ struct ExamController: RouteCollection {
 
                     let questionID = try question.requireID()
 
-                    for anwserDTO in questionDTO.answers {
+                    for answerDTO in questionDTO.answers {
                         let answer = Answer(
-                            answerText: anwserDTO.answerText,
-                            isCorrect: anwserDTO.isCorrect,
+                            answerText: answerDTO.answerText,
+                            isCorrect: answerDTO.isCorrect,
                             questionID: questionID
                         )
 
@@ -125,10 +125,10 @@ struct CreateSubjectData: Content {
 struct CreateQuestionData: Content {
     let questionNumber: String
     let title: String
-    let answers: [CreateAnwserData]
+    let answers: [CreateAnswerData]
 }
 
-struct CreateAnwserData: Content {
+struct CreateAnswerData: Content {
     let answerText: String
     let isCorrect: Bool
 }
