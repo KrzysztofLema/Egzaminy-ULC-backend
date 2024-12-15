@@ -1,7 +1,7 @@
 import Fluent
 
-struct CreateAnwser: AsyncMigration {
-    private typealias AnwserKey = Answer.Key
+struct CreateAnswer: AsyncMigration {
+    private typealias AnswerKey = Answer.Key
     private typealias Schema = Answer.Schema
     private typealias QuestionSchema = Question.Schema
 
@@ -9,9 +9,9 @@ struct CreateAnwser: AsyncMigration {
         try await database
             .schema(Schema.title)
             .id()
-            .field(AnwserKey.anwserText, .string, .required)
-            .field(AnwserKey.isCorrect, .bool, .required)
-            .field(AnwserKey.questionID, .uuid, .required, .references(QuestionSchema.title, FieldKey.id, onDelete: .cascade))
+            .field(AnswerKey.answerText, .string, .required)
+            .field(AnswerKey.isCorrect, .bool, .required)
+            .field(AnswerKey.questionID, .uuid, .required, .references(QuestionSchema.title, FieldKey.id, onDelete: .cascade))
             .create()
     }
 

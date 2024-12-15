@@ -28,7 +28,7 @@ public func configure(_ app: Application) async throws {
     app.migrations.add(CreateExam())
     app.migrations.add(CreateSubject())
     app.migrations.add(CreateQuestion())
-    app.migrations.add(CreateAnwser())
+    app.migrations.add(CreateAnswer())
     app.migrations.add(CreateToken())
     app.migrations.add(CreateAdminUser())
 
