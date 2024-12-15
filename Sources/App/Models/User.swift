@@ -39,7 +39,7 @@ final class User: Model, Content, @unchecked Sendable {
         self.profilePicture = profilePicture
     }
 
-    final class Public: Content {
+    final class Public: Content, @unchecked Sendable {
         var id: UUID?
         var name: String
         var username: String

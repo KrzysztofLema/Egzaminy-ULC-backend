@@ -10,8 +10,8 @@ final class Answer: Model, Content, @unchecked Sendable {
     @Field(key: Key.answerText)
     var answerText: String
 
-    @Field(key: Key.isCorrect)
-    var isCorrect: Bool
+    @OptionalField(key: Key.isCorrect)
+    var isCorrect: Bool?
 
     @Parent(key: Key.questionID)
     var question: Question
@@ -21,7 +21,7 @@ final class Answer: Model, Content, @unchecked Sendable {
     init(
         id: UUID? = nil,
         answerText: String,
-        isCorrect: Bool,
+        isCorrect: Bool? = nil,
         questionID: Question.IDValue
     ) {
         self.id = id

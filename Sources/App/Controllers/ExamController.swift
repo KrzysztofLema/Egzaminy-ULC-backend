@@ -116,5 +116,5 @@ struct CreateQuestionData: Content {
 
 struct CreateAnswerData: Content {
     let answerText: String
-    let isCorrect: Bool
+    let isCorrect: Bool?
 }
