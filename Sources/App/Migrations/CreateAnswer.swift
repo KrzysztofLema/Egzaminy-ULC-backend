@@ -10,7 +10,7 @@ struct CreateAnswer: AsyncMigration {
             .schema(Schema.title)
             .id()
             .field(AnswerKey.answerText, .string, .required)
-            .field(AnswerKey.isCorrect, .bool, .required)
+            .field(AnswerKey.isCorrect, .bool)
             .field(AnswerKey.questionID, .uuid, .required, .references(QuestionSchema.title, FieldKey.id, onDelete: .cascade))
             .create()
     }
