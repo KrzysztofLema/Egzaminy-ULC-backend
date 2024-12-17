@@ -28,9 +28,6 @@ final class Exam: Model, Content, @unchecked Sendable {
     @Children(for: \.$exam)
     var subjects: [Subject]
 
-    @Parent(key: Key.userID)
-    var user: User
-
     init() {}
 
     init(
@@ -40,8 +37,7 @@ final class Exam: Model, Content, @unchecked Sendable {
         text: String,
         image: String,
         background: String,
-        logo: String,
-        userID: User.IDValue
+        logo: String
     ) {
         self.id = id
         self.title = title
@@ -50,7 +46,6 @@ final class Exam: Model, Content, @unchecked Sendable {
         self.image = image
         self.background = background
         self.logo = logo
-        $user.id = userID
     }
 }
 
@@ -62,7 +57,6 @@ extension Exam {
         static let image: FieldKey = "image"
         static let background: FieldKey = "background"
         static let logo: FieldKey = "logo"
-        static let userID: FieldKey = "userID"
     }
 
     enum Schema {

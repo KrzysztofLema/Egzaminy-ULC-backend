@@ -14,7 +14,6 @@ struct CreateExam: AsyncMigration {
             .field(ExamKey.image, .string, .required)
             .field(ExamKey.background, .string, .required)
             .field(ExamKey.logo, .string, .required)
-            .field(ExamKey.userID, .uuid, .required, .references(UsersSchema.title, FieldKey.id, onDelete: .cascade))
             .create()
     }
 

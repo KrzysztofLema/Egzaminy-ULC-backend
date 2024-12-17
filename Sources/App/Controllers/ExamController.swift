@@ -5,16 +5,8 @@ struct ExamController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         let examsRoutes = routes.grouped("api", "exams")
 
-        let tokenAuthMiddleware = Token.authenticator()
-        let guardAuthMiddleware = User.guardMiddleware()
-
-        let tokenAuthGroup = examsRoutes.grouped(
-            tokenAuthMiddleware,
-            guardAuthMiddleware
-        )
-
-        tokenAuthGroup.post(use: createHandler)
-        tokenAuthGroup.get(use: getAllHandler)
+        examsRoutes.post(use: createHandler)
+        examsRoutes.get(use: getAllHandler)
     }
 
     @Sendable
@@ -25,15 +17,12 @@ struct ExamController: RouteCollection {
                 subject.with(\.$questions) { question in
                     question.with(\.$answers)
                 }
-            }
-            .all()
+            }.all()
     }
 
     @Sendable
     func createHandler(_ req: Request) async throws -> HTTPStatus {
         let examData = try req.content.decode(CreateExamData.self)
-        let user = try req.auth.require(User.self)
-        let userID = try user.requireID()
 
         return try await req.db.transaction { database in
             let exam = Exam(
@@ -42,9 +31,9 @@ struct ExamController: RouteCollection {
                 text: examData.text,
                 image: examData.image,
                 background: examData.background,
-                logo: examData.logo,
-                userID: userID
+                logo: examData.logo
             )
+
             try await exam.save(on: database)
             let examID = try exam.requireID()
 
@@ -90,8 +79,6 @@ struct ExamController: RouteCollection {
         guard let exam = try await Exam.find(req.parameters.get("examID"), on: req.db) else {
             throw Abort(.notFound)
         }
-        let user = try req.auth.require(User.self)
-        let userID = try user.requireID()
 
         exam.title = updatedExam.title
         exam.subtitle = updatedExam.subtitle
@@ -99,7 +86,6 @@ struct ExamController: RouteCollection {
         exam.image = updatedExam.image
         exam.background = updatedExam.logo
         exam.logo = updatedExam.logo
-        exam.$user.id = userID
 
         try await exam.save(on: req.db)
         return exam

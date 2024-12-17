@@ -13,9 +13,6 @@ final class User: Model, Content, @unchecked Sendable {
     @Field(key: Key.username)
     var username: String
 
-    @Children(for: \.$user)
-    var exams: [Exam]
-
     @Field(key: Key.password)
     var password: String
 
