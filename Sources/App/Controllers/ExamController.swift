@@ -13,11 +13,8 @@ struct ExamController: RouteCollection {
     func getAllHandler(_ req: Request) async throws -> [Exam] {
         try await Exam
             .query(on: req.db)
-            .with(\.$subjects) { subject in
-                subject.with(\.$questions) { question in
-                    question.with(\.$answers)
-                }
-            }.all()
+            .with(\.$subjects)
+            .all()
     }
 
     @Sendable

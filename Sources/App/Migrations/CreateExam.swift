@@ -27,53 +27,58 @@ struct SeedExam: AsyncMigration {
     
     func prepare(on database: Database) async throws {
         let fileManager = FileManager.default
-        let path = fileManager.currentDirectoryPath + "/PrivateResources/ppla_formatted.json"
+        let path = fileManager.currentDirectoryPath + "/Public/exams.json"
         if let data = fileManager.contents(atPath: path) {
-            let examData = try JSONDecoder().decode(CreateExamData.self, from: data)
-            let exam = Exam(
-                title: examData.title,
-                subtitle: examData.subtitle,
-                text: examData.text,
-                image: examData.image,
-                background: examData.background,
-                logo: examData.logo
-                //                userID: userID
-            )
-            try await exam.save(on: database)
-            let examID = try exam.requireID()
+            let examData = try JSONDecoder().decode([CreateExamData].self, from: data)
             
-            for subjectDTO in examData.subjects {
-                let subject = Subject(
-                    title: subjectDTO.title,
-                    image: subjectDTO.image,
-                    examID: examID
+            for exam in examData {
+                
+                let examDTO = Exam(
+                    title: exam.title,
+                    subtitle: exam.subtitle,
+                    text: exam.text,
+                    image: exam.image,
+                    background: exam.background,
+                    logo: exam.logo
+                    //                userID: userID
                 )
-                try await subject.save(on: database)
+                try await examDTO.save(on: database)
+                let examID = try examDTO.requireID()
                 
-                let subjectID = try subject.requireID()
-                
-                for questionDTO in subjectDTO.questions {
-                    let question = Question(
-                        questionNumber: questionDTO.questionNumber,
-                        title: questionDTO.title,
-                        subjectID: subjectID
+                for subjectDTO in exam.subjects {
+                    let subject = Subject(
+                        title: subjectDTO.title,
+                        image: subjectDTO.image,
+                        examID: examID
                     )
+                    try await subject.save(on: database)
                     
-                    try await question.save(on: database)
+                    let subjectID = try subject.requireID()
                     
-                    let questionID = try question.requireID()
-                    
-                    for answerDTO in questionDTO.answers {
-                        let answer = Answer(
-                            answerText: answerDTO.answerText,
-                            isCorrect: answerDTO.isCorrect,
-                            questionID: questionID
+                    for questionDTO in subjectDTO.questions {
+                        let question = Question(
+                            questionNumber: questionDTO.questionNumber,
+                            title: questionDTO.title,
+                            subjectID: subjectID
                         )
                         
-                        try await answer.save(on: database)
+                        try await question.save(on: database)
+                        
+                        let questionID = try question.requireID()
+                        
+                        for answerDTO in questionDTO.answers {
+                            let answer = Answer(
+                                answerText: answerDTO.answerText,
+                                isCorrect: answerDTO.isCorrect,
+                                questionID: questionID
+                            )
+                            
+                            try await answer.save(on: database)
+                        }
                     }
                 }
             }
+            
         } else {
             fatalError("company.json not found. Set scheme's `Working Directory` to the project's folder and try again.")
         }
