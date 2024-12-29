@@ -6,7 +6,8 @@ struct ExamController: RouteCollection {
         let examsRoutes = routes.grouped("api", "exams")
 
         examsRoutes.post(use: createHandler)
-        examsRoutes.get(use: getAllHandler)
+        examsRoutes.get("all", use: getAllHandler)
+        examsRoutes.get("", use: getExamByIDHandler)
     }
 
     @Sendable
@@ -15,6 +16,25 @@ struct ExamController: RouteCollection {
             .query(on: req.db)
             .with(\.$subjects)
             .all()
+    }
+    
+    @Sendable
+    func getExamByIDHandler(_ req: Request) async throws -> Exam {
+        guard let examIDString = req.query[String.self, at: "examID"],
+              let examID = UUID(uuidString: examIDString) else {
+            throw Abort(.badRequest, reason: "Invalid or missing examID query parameter")
+        }
+        guard let exam = try await Exam
+            .query(on: req.db)
+            .filter(\.$id == examID)
+            .with(\.$subjects, { subject in
+                subject.with(\.$questions) { question in
+                    question.with(\.$answers)
+                }
+            }).first() else {
+             throw Abort(.notFound, reason: "Exam not found")
+            }
+        return exam
     }
 
     @Sendable
