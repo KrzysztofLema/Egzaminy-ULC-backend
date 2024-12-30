@@ -14,7 +14,6 @@ struct ExamController: RouteCollection {
     func getAllHandler(_ req: Request) async throws -> [Exam] {
         try await Exam
             .query(on: req.db)
-            .with(\.$subjects)
             .all()
     }
     
@@ -27,11 +26,8 @@ struct ExamController: RouteCollection {
         guard let exam = try await Exam
             .query(on: req.db)
             .filter(\.$id == examID)
-            .with(\.$subjects, { subject in
-                subject.with(\.$questions) { question in
-                    question.with(\.$answers)
-                }
-            }).first() else {
+            .with(\.$subjects)
+            .first() else {
              throw Abort(.notFound, reason: "Exam not found")
             }
         return exam
