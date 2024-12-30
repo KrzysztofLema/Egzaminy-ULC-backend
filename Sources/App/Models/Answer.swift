@@ -39,6 +39,6 @@ extension Answer {
     }
 
     enum Schema {
-        static let title: String = "answer"
+        static let title: String = "answers"
     }
 }
