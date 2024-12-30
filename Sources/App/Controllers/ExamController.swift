@@ -26,7 +26,9 @@ struct ExamController: RouteCollection {
         guard let exam = try await Exam
             .query(on: req.db)
             .filter(\.$id == examID)
-            .with(\.$subjects)
+            .with(\.$subjects, { subject in
+                subject.with(\.$questions)
+            })
             .first() else {
              throw Abort(.notFound, reason: "Exam not found")
             }
