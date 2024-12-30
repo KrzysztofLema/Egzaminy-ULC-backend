@@ -7,7 +7,20 @@ struct ExamController: RouteCollection {
 
         examsRoutes.post(use: createHandler)
         examsRoutes.get("all", use: getAllHandler)
+        examsRoutes.get("all", "data", use: getAllData)
         examsRoutes.get("", use: getExamByIDHandler)
+    }
+
+    @Sendable
+    func getAllData(_ req: Request) async throws -> [Exam] {
+        try await Exam
+            .query(on: req.db)
+            .with(\.$subjects) { subject in
+                subject.with(\.$questions) { question in
+                    question.with(\.$answers)
+                }
+            }
+            .all()
     }
 
     @Sendable
@@ -16,7 +29,7 @@ struct ExamController: RouteCollection {
             .query(on: req.db)
             .all()
     }
-    
+
     @Sendable
     func getExamByIDHandler(_ req: Request) async throws -> Exam {
         guard let examIDString = req.query[String.self, at: "examID"],
@@ -26,10 +39,12 @@ struct ExamController: RouteCollection {
         guard let exam = try await Exam
             .query(on: req.db)
             .filter(\.$id == examID)
-            .with(\.$subjects)
+            .with(\.$subjects, { subject in
+                subject.with(\.$questions)
+            })
             .first() else {
-             throw Abort(.notFound, reason: "Exam not found")
-            }
+            throw Abort(.notFound, reason: "Exam not found")
+        }
         return exam
     }
 
