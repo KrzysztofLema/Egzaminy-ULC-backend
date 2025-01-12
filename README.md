@@ -75,12 +75,6 @@ This backend is a work in progress, and as such, some features may not be fully 
 
 This project is set up with **GitHub Actions** to automatically deploy changes to **Fly.io**. Whenever a change is pushed to the `main` branch, the backend is automatically built and deployed.
 
-## 🎓 Inspired by
-
-This project follows some inspiration from:
-- **[Swiftystack](https://www.swiftystack.com)** for project structure and modularization
-- **[Pointfreeco - isowords](https://github.com/pointfreeco/isowords)** for SwiftUI architecture inspiration
-
 ## 💡 Resources & Learning
 
 I have learned a lot from the following resources while working on this project:
