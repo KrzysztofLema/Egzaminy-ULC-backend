@@ -64,12 +64,11 @@ The backend exposes a set of REST API endpoints for managing questions for vario
 
 It retrieves and stores the data dynamically to sync with the iOS app, and features a modular structure to ensure maintainability and scalability.
 
-## 🚧 Work In Progress
+## 🚨 Repository Status  
 
-This backend is a work in progress, and as such, some features may not be fully implemented yet. However, it's actively being developed and improved. Some areas that are still under development include:
-- Additional API endpoints for exam management
-- Full feature flag implementation via LaunchDarkly
-- More robust error handling and validation
+🚨 **Important Notice** 🚨  
+This project has been moved to a **private repository** for further development and maintenance.  
+
 
 ## 📦 CI/CD with GitHub Actions
 
