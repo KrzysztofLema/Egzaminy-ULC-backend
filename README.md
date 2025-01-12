@@ -91,14 +91,8 @@ I have learned a lot from the following resources while working on this project:
 
 I built this backend as part of my learning process while working on the companion iOS app, which is for users preparing for various exams administered by the Polish Civil Aviation Authority (ULC).
 
-## 📞 Contact Me
-
-📍 **Location**: Wroclaw, Poland  
-📧 **Email**: KrzysztofLema@iCloud.com  
-🌐 **GitHub**: [github.com/KrzysztofLema](https://github.com/KrzysztofLema)  
-📱 **Phone**: +48 602-681-879
-
 ## 📜 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+🏆 Created by Krzysztof Lema | [GitHub](https://github.com/KrzysztofLema) | [LinkedIn](https://www.linkedin.com/in/krzysztoflema/)
